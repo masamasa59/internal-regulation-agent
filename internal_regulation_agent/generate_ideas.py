@@ -7,7 +7,7 @@ from typing import List, Dict, Union
 import backoff
 import requests
 
-from ai_scientist.llm import get_response_from_llm, extract_json_between_markers, create_client, AVAILABLE_LLMS
+from internal_regulation_agent.llm import get_response_from_llm, extract_json_between_markers, create_client, AVAILABLE_LLMS
 
 S2_API_KEY = os.getenv("S2_API_KEY")
 

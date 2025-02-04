@@ -1,18 +1,11 @@
-# LLM APIs
-anthropic
-aider-chat
-backoff
-openai
-google-generativeai
-# Viz
-matplotlib
-pypdf
-pymupdf4llm
-# Common Requirements
-torch
-numpy
-transformers
-datasets
-tiktoken
-wandb
-tqdm
+anthropic==0.45.2
+backoff==2.2.1
+google-generativeai==0.8.4
+langchain-community==0.3.16
+openai==1.60.2
+weasyprint==64.0
+
+black==23.3.0
+flake8==7.1.1
+isort==6.0.0
+

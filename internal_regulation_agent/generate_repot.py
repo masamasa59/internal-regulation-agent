@@ -5,8 +5,11 @@ from typing import Any, List
 from weasyprint import HTML
 
 from internal_regulation_agent.execute_plan import Regulation
-from internal_regulation_agent.llm import (AVAILABLE_LLMS, create_client,
-                                           get_response_from_llm)
+from internal_regulation_agent.llm import (
+    AVAILABLE_LLMS,
+    create_client,
+    get_response_from_llm,
+)
 
 reporting_system_message = """
 You are responsible for summarizing the results of the user's tasks.  
@@ -38,7 +41,6 @@ For files that were not updated, are the reasons also explicitly provided?
 Is the content structured in an easy-to-read format using hierarchical organization or tables?  
 Please review everything, including the design aspects, and regenerate the report in HTML format.  
 """
-
 
 
 def generate_report(
@@ -93,7 +95,7 @@ def generate_report(
     except Exception as e:
         print(f"Failed to generate pdf: {str(e)}")
         return False
-    
+
     return True
 
 

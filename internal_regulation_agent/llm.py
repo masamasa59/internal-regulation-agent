@@ -4,8 +4,8 @@ import re
 
 import anthropic
 import backoff
-import openai
 import google.generativeai as genai
+import openai
 from google.generativeai.types import GenerationConfig
 
 MAX_NUM_TOKENS = 4096
@@ -16,7 +16,7 @@ AVAILABLE_LLMS = [
     "claude-3-5-sonnet-20241022",
     # OpenAI models
     "gpt-4o-mini-2024-07-18",
-    "gpt-4o-2024-05-13",
+    "gpt-4o-2024-11-20",
     "gpt-4o-2024-08-06",
     "o1-preview-2024-09-12",
     "o1-mini-2024-09-12",
@@ -48,14 +48,14 @@ AVAILABLE_LLMS = [
 # Get N responses from a single message, used for ensembling.
 @backoff.on_exception(backoff.expo, (openai.RateLimitError, openai.APITimeoutError))
 def get_batch_responses_from_llm(
-        msg,
-        client,
-        model,
-        system_message,
-        print_debug=False,
-        msg_history=None,
-        temperature=0.75,
-        n_responses=1,
+    msg,
+    client,
+    model,
+    system_message,
+    print_debug=False,
+    msg_history=None,
+    temperature=0.75,
+    n_responses=1,
 ):
     if msg_history is None:
         msg_history = []
@@ -128,13 +128,13 @@ def get_batch_responses_from_llm(
 
 @backoff.on_exception(backoff.expo, (openai.RateLimitError, openai.APITimeoutError))
 def get_response_from_llm(
-        msg,
-        client,
-        model,
-        system_message,
-        print_debug=False,
-        msg_history=None,
-        temperature=0.75,
+    msg,
+    client,
+    model,
+    system_message,
+    print_debug=False,
+    msg_history=None,
+    temperature=0.75,
 ):
     if msg_history is None:
         msg_history = []
@@ -171,7 +171,7 @@ def get_response_from_llm(
             }
         ]
     elif model in [
-        "gpt-4o-2024-05-13",
+        "gpt-4o-2024-11-20",
         "gpt-4o-mini-2024-07-18",
         "gpt-4o-2024-08-06",
     ]:
@@ -318,7 +318,7 @@ def create_client(model):
         client_model = model.split("/")[-1]
         print(f"Using Vertex AI with model {client_model}.")
         return anthropic.AnthropicVertex(), client_model
-    elif 'gpt' in model:
+    elif "gpt" in model:
         print(f"Using OpenAI API with model {model}.")
         return openai.OpenAI(), model
     elif model in ["o1-preview-2024-09-12", "o1-mini-2024-09-12"]:
@@ -326,16 +326,22 @@ def create_client(model):
         return openai.OpenAI(), model
     elif model in ["deepseek-chat", "deepseek-reasoner"]:
         print(f"Using OpenAI API with {model}.")
-        return openai.OpenAI(
-            api_key=os.environ["DEEPSEEK_API_KEY"],
-            base_url="https://api.deepseek.com"
-        ), model
+        return (
+            openai.OpenAI(
+                api_key=os.environ["DEEPSEEK_API_KEY"],
+                base_url="https://api.deepseek.com",
+            ),
+            model,
+        )
     elif model == "llama3.1-405b":
         print(f"Using OpenAI API with {model}.")
-        return openai.OpenAI(
-            api_key=os.environ["OPENROUTER_API_KEY"],
-            base_url="https://openrouter.ai/api/v1"
-        ), "meta-llama/llama-3.1-405b-instruct"
+        return (
+            openai.OpenAI(
+                api_key=os.environ["OPENROUTER_API_KEY"],
+                base_url="https://openrouter.ai/api/v1",
+            ),
+            "meta-llama/llama-3.1-405b-instruct",
+        )
     elif "gemini" in model:
         print(f"Using Google Generative AI with model {model}.")
         genai.configure(api_key=os.environ["GEMINI_API_KEY"])

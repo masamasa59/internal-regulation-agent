@@ -7,16 +7,11 @@ from langchain_community.document_loaders import Docx2txtLoader
 from pydantic import BaseModel, Field
 
 from internal_regulation_agent.create_internal_regulatiom_summary import (
-    InternalRegulationSummary,
-    retrieve_internal_regulation_summary,
-)
+    InternalRegulationSummary, retrieve_internal_regulation_summary)
 from internal_regulation_agent.generate_plan import Task, parse_json_to_tasks
-from internal_regulation_agent.llm import (
-    AVAILABLE_LLMS,
-    create_client,
-    extract_json_between_markers,
-    get_response_from_llm,
-)
+from internal_regulation_agent.llm import (AVAILABLE_LLMS, create_client,
+                                           extract_json_between_markers,
+                                           get_response_from_llm)
 
 execution_prompt = """
 Please update the following internal regulation text if necessary to fulfill the user's request, based on the reason for reviewing the regulation.
@@ -152,8 +147,9 @@ def execute_plan(
 
         current_task = tasks.pop(0)
         print("=====================================================")
-        print(f"[[Current task]]: {current_task}")
-        print(f"[[Remaining tasks]]:{len(tasks)}")
+        print(f"[[Current Task]]: {current_task}")
+        print(f"[[Remaining Tasks]]: {len(tasks)}")
+        print(f"[[Completed Tasks]]: {len(completed_tasks)}")
 
         try:
             regulation_text = retrieve_internal_regulation(
@@ -173,7 +169,6 @@ def execute_plan(
             regulation_text=regulation_text,
             output_schema=Regulation.model_json_schema(),
         )
-        print(f"system_message >>>>> {execution_system_message}")
 
         # EXECUTION TASK
         user_message = "Please update the internal regulation."
@@ -188,7 +183,7 @@ def execute_plan(
             print(f"Error during LLM call for updating regulation: {e}")
             continue
 
-        print(f"[[Current task]]: {current_task}, Updated Result >>>>> {content}")
+        print(f"[[EXECUTION]]: {content}")
 
         json_output = extract_json_between_markers(content)
         if json_output is None:
@@ -217,7 +212,7 @@ def execute_plan(
             current_regulation=current_task.file_name,
             output_schema=Task.model_json_schema(),
         )
-        print(f"system_message >>>>> {replanning_system_message}")
+
         try:
             context, _ = get_response_from_llm(
                 msg=user_message,
@@ -225,7 +220,7 @@ def execute_plan(
                 client=client,
                 model=client_model,
             )
-            print(f"Additional tasks response >>>>> {context}")
+            print(f"[[Additional Tasks]]: {context}")
         except Exception as e:
             print(f"Error during LLM call for replanning: {e}")
             continue
@@ -237,7 +232,6 @@ def execute_plan(
             tasks.extend(new_tasks)
         else:
             print("No additional tasks to check.")
-
     return updated_regulations
 
 

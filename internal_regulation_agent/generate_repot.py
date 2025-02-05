@@ -5,11 +5,8 @@ from typing import Any, List
 from weasyprint import HTML
 
 from internal_regulation_agent.execute_plan import Regulation
-from internal_regulation_agent.llm import (
-    AVAILABLE_LLMS,
-    create_client,
-    get_response_from_llm,
-)
+from internal_regulation_agent.llm import (AVAILABLE_LLMS, create_client,
+                                           get_response_from_llm)
 
 reporting_system_message = """
 You are responsible for summarizing the results of the user's tasks.  
@@ -58,8 +55,7 @@ def generate_report(
             query=query,
             result=updated_regulations,
         )
-        print(f"system_message >>>>> {system_message}")
-
+        
         html_content, messages = get_response_from_llm(
             msg="Create a report summarizing the user's tasks using HTML format.",
             system_message=system_message,

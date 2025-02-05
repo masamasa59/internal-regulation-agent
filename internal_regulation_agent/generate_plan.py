@@ -4,15 +4,10 @@ from typing import Any, Dict, List
 from pydantic import BaseModel, Field
 
 from internal_regulation_agent.create_internal_regulatiom_summary import (
-    InternalRegulationSummary,
-    retrieve_internal_regulation_summary,
-)
-from internal_regulation_agent.llm import (
-    AVAILABLE_LLMS,
-    create_client,
-    extract_json_between_markers,
-    get_response_from_llm,
-)
+    InternalRegulationSummary, retrieve_internal_regulation_summary)
+from internal_regulation_agent.llm import (AVAILABLE_LLMS, create_client,
+                                           extract_json_between_markers,
+                                           get_response_from_llm)
 
 planning_prompt = """
 You are tasked with updating the internal regulations of your company.
@@ -104,7 +99,6 @@ def generate_init_plan(
         internal_regulation_summary=internal_regulation_summary.content,
         output_schema=Task.model_json_schema(),
     )
-    print(f"system_message >>>>> {planning_system_message}")
 
     # GENERATE PLAN
     content, _ = get_response_from_llm(
@@ -113,7 +107,7 @@ def generate_init_plan(
         client=client,
         model=model_name,
     )
-    print(f"generated plan >>>>> {content}")
+    print(f"generated plan:{content}")
 
     # PARSE OUTPUT
     json_output = extract_json_between_markers(content)

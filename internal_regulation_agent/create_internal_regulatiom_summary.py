@@ -16,20 +16,20 @@ def create_internal_regulation_summary_file(
     base_dir: str, file_name: str
 ) -> InternalRegulationSummary:
     """
-    base_dir内のファイル名一覧を取得し、社内規程のファイル名一覧ファイルを作成する関数
+    Function to retrieve a list of file names within base_dir 
+    and create a file containing the list of internal regulation files.
     """
     data_dir = os.path.join(base_dir, "data")
     if not os.path.exists(data_dir):
-        raise ValueError(f"{data_dir} が存在しません。")
+        raise ValueError(f"{data_dir} does not exist.")
     try:
-        # Unix/Linux, macOSの場合
+        # For Unix/Linux and macOS
         result = subprocess.check_output(["tree", data_dir], text=True)
     except FileNotFoundError:
-        # treeコマンドが無い場合のエラー処理
+        # Error handling when the 'tree' command is not available
         raise RuntimeError(
-            "tree コマンドが見つかりません。インストールされているか確認してください。"
+            "The 'tree' command was not found. Please check if it is installed."
         )
-    # ファイルを保存
     output_file_path = os.path.join(base_dir, file_name)
     with open(output_file_path, "w") as file:
         file.write(result)
@@ -45,10 +45,11 @@ def retrieve_internal_regulation_summary(
 ) -> InternalRegulationSummary:
     summary_file_name = INTERNAL_REGULATION_SUMMARY_FILE_NAME
     if not skip_summary_file_creation:
-        # CREATE INTERNAL REGULATION SUMMARY FILE
+        print("[[CREATE INTERNAL REGULATION SUMMARY FILE]]")
         internal_regulation_summary = create_internal_regulation_summary_file(
             base_dir, file_name=summary_file_name
         )
+        print("[[SUMMARY FILE CREATION COMPLETED]]")
     else:
         with open(osp.join(base_dir, summary_file_name), "r") as f:
             internal_regulation_summary = InternalRegulationSummary(

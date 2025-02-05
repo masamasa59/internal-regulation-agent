@@ -54,15 +54,18 @@ if __name__ == "__main__":
     internal_regulation_summary = retrieve_internal_regulation_summary(
         base_dir, skip_summary_file_creation=args.skip_summary_file_creation
     )
-    
+
+    print("[[INIT PLANNING START]]")
     tasks = generate_init_plan(
         query=args.query,
         client=client,
         model_name=client_model,
         internal_regulation_summary=internal_regulation_summary,
     )
-    print(f"Check docs: {tasks}")
+    print(f"[[INIT PLANNING RESULT]]:{tasks}")
+    print("[[INIT PLANNING END]]")
 
+    print("[[EXECUTE PLAN START]]")
     updated_regulations = execute_plan(
         query=args.query,
         tasks=tasks,
@@ -72,10 +75,10 @@ if __name__ == "__main__":
         internal_regulation_summary=internal_regulation_summary,
         time_out=TIME_OUT_SECONDS,
     )
-    print("All steps completed.")
+    print("[[EXECUTE PLAN END]]")
 
     try:
-        print("Outputting PDF")
+        print("[[REPORT START]]")
         success = generate_report(
             query=args.query,
             updated_regulations=updated_regulations,
@@ -83,8 +86,8 @@ if __name__ == "__main__":
             client=client,
             model_name=client_model,
         )
-
         print(f" Success: {success}")
+        print("[[REPORT END]]")
     except Exception as e:
         print(f"Failed to output pdf: {str(e)}")
         import traceback

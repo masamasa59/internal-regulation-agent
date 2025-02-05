@@ -1,9 +1,8 @@
 import argparse
 import os.path as osp
 
-from internal_regulation_agent.create_internal_regulatiom_summary import (
-    retrieve_internal_regulation_summary,
-)
+from internal_regulation_agent.create_internal_regulatiom_summary import \
+    retrieve_internal_regulation_summary
 from internal_regulation_agent.execute_plan import execute_plan
 from internal_regulation_agent.generate_plan import generate_init_plan
 from internal_regulation_agent.generate_repot import generate_report
@@ -34,7 +33,12 @@ def parse_arguments():
         default="internal_regulations",
         help="Experiment name to use for Internal Regulation Agent.",
     )
-
+    parser.add_argument(
+        "--skip_summary_file_creation",
+        type=bool,
+        default=False,
+        help="Set to False when creating the internal_regulation_summary.txt file. If the file already exists, set it to True. Initially, it should be False.",
+    )
     return parser.parse_args()
 
 
@@ -48,8 +52,9 @@ if __name__ == "__main__":
     results_dir = osp.join("results", args.experiment)
 
     internal_regulation_summary = retrieve_internal_regulation_summary(
-        base_dir, skip_summary_file_creation=True
+        base_dir, skip_summary_file_creation=args.skip_summary_file_creation
     )
+    
     tasks = generate_init_plan(
         query=args.query,
         client=client,

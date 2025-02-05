@@ -4,7 +4,7 @@
 I have developed an AI agent that explores internal company documents. Unlike Retrieval-Augmented Generation (RAG), this agent selects which files to check by reviewing the list of filenames in the knowledge bank. After reading the selected files, it determines whether additional files need to be reviewed. Through this step-by-step process, the agent systematically explores internal documents while staying focused on its objective.
 
 <figure style="text-align: center;">
-    <img alt="AI Agent Workflow" src="assets/ai_agents.png" width="500" />
+    <img alt="AI Agent Workflow" src="assets/ai_agents.png" width="600" />
 </figure>
 
 ## Applications
@@ -20,7 +20,7 @@ The current prompt is specifically tuned for updating internal regulations.
 
 ## Agent Architecture
 <figure style="text-align: center;">
-    <img alt="Internal Regulation Agent Architecture" src="assets/internal_regulation-agent.png" width="500" />
+    <img alt="Internal Regulation Agent Architecture" src="assets/internal_regulation-agent.png" width="800" />
 </figure>
 
 The agent operates through the following steps:
